@@ -17,7 +17,7 @@ This console application bridges DCS World with some of the WinCtrl hardware, en
 2. **Download and extract** this application to your preferred folder
 5. **Connect** your WinCtrl CDU ( before starting bridge )
 6. **run** the application
-7. **Launch DCS** and select your aircraft from the MCDU menu
+7. **Launch DCS** and select your aircraft from the CDU menu
 
 ## Requirements
 
