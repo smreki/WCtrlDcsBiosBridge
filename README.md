@@ -5,7 +5,7 @@
 ![Build Status][build-shield]
 [![Pre-Release][pre-release-shield]][pre-release-url]
 
-# WWCduDCSBiosBridge
+# WctrlDcsBiosBridge
 
 This console application bridges DCS World with some of the WinCtrl hardware, enabling real-time data exchange between the simulator and the physical device.
 
