@@ -99,7 +99,7 @@ if no config.json is found, it will create a default one and show you a dialog b
 
 **"PLT_CDU_LINE1" does not exist (CH-47 Chinook)**
 - Wrong dcsbios version installed.
-- You need a version later than 0.11.0
+- You need version 0.11.0 or later
   
 **"Connection failed" or CDU not responding**
 - Ensure your WinCtrl CDU is properly connected
