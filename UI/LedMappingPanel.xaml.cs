@@ -162,8 +162,8 @@ public sealed partial class LedMappingPanel : UserControl
 
     /// <summary>
     /// The aircraft that can be configured: those DCS-BIOS actually exports controls for.
-    /// The C-130J and F-14B(U) borrow another module's id purely so the control locator has
-    /// something to load — binding their neighbour's controls would light nothing.
+    /// The F-14B(U) borrows another module's id purely so the control locator has something
+    /// to load — binding its neighbour's controls would light nothing.
     /// </summary>
     private static IReadOnlyList<AircraftDescriptor> Configurable { get; } =
         AircraftRegistry.All.Where(d => d.DcsBiosModuleId is null).ToList();

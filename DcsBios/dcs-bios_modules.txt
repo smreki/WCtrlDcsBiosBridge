@@ -51,7 +51,7 @@ MH-60R|47|MH-60R SeaHawk
 F-4E|48|F-4E Phantom II
 OH-58D|49|OH-58D Kiowa Warrior
 CH-47F|50|CH-47 Chinook
-
+C-130J|51|C-130J Hercules
 MetadataEnd|500|MetadataEnd|CommonModules
 MetadataStart|501|MetadataStart|CommonModules
 CommonData|502|CommonData|CommonModules

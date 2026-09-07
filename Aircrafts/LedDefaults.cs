@@ -226,12 +226,24 @@ public static class LedDefaults
             },
         },
 
-        // C-130J — DCS-BIOS has no module for this aircraft, so nothing here can name a control.
-        // The CNI-MU's EXEC annunciator is read off the page title instead (see CniExecLamp),
-        // and it is declared on both lamps because the panels disagree on which one exists:
-        // EXEC on the PFPs, RDY on the MCDU.
-        [1030] = new AircraftLedDefaults
+        // C-130J — the gear and the master caution are the module's own controls. The CNI-MU's
+        // EXEC annunciator is not: DCS-BIOS declares PLT_CNI_EXEC_LED on cockpit argument 3390
+        // and that argument never leaves zero, so the lamp is read off the CNI page title
+        // instead (see CniExecLamp). It is declared on both annunciators because the panels
+        // disagree on which one exists: EXEC on the PFPs, RDY on the MCDU.
+        [51] = new AircraftLedDefaults
         {
+            Signals = new[]
+            {
+                new SignalDefault(FlightDeckSignal.GearLeftDown, "LANDING_GEAR_LOCKED_L"),
+                new SignalDefault(FlightDeckSignal.GearNoseDown, "LANDING_GEAR_LOCKED_C"),
+                new SignalDefault(FlightDeckSignal.GearRightDown, "LANDING_GEAR_LOCKED_R"),
+                new SignalDefault(FlightDeckSignal.GearWarning, "LANDING_GEAR_LEVER_LIGHT"),
+            },
+            McduLeds = new[]
+            {
+                new McduLedDefault(McduLed.Fail, "PLT_REF_MODE_MASTER_CAUTION_L"),
+            },
             ComputedMcduLeds = new Dictionary<McduLed, string>
             {
                 [McduLed.Exec] = "CNI page title (MOD prefix)",

@@ -1,4 +1,5 @@
 using WCtrlDcsBiosBridge.Aircrafts;
+using WCtrlDcsBiosBridge.Devices.Frontpanels;
 using Xunit;
 
 namespace WCtrlDcsBiosBridge.Tests;
@@ -20,18 +21,34 @@ public class C130JRegistryTests
     }
 
     /// <summary>
-    /// The id is synthetic because DCS-BIOS has no C-130J. It still has to borrow a real
-    /// module's id and json, or the control locator has nothing to load and the listener
-    /// throws on construction.
+    /// DCS-BIOS carries the aircraft now, so the descriptor names its own module rather than
+    /// borrowing the A-10C's. It borrowed one for as long as there was nothing else for the
+    /// control locator to load, at the cost of resolving another module's controls.
     /// </summary>
     [Fact]
-    public void BorrowsARealDcsBiosModule()
+    public void NamesItsOwnDcsBiosModule()
     {
-        Assert.NotEqual(AircraftRegistry.C130J.ModuleId,
-                        AircraftRegistry.C130J.EffectiveDcsBiosModuleId);
-        Assert.Equal(AircraftRegistry.A10C.ModuleId,
+        Assert.Null(AircraftRegistry.C130J.DcsBiosModuleId);
+        Assert.Equal(AircraftRegistry.C130J.ModuleId,
                      AircraftRegistry.C130J.EffectiveDcsBiosModuleId);
+        Assert.Equal("C-130J.json", AircraftRegistry.C130J.JsonFile);
         Assert.Contains(AircraftRegistry.C130J.JsonFile, AircraftRegistry.ExpectedJsonFiles);
+    }
+
+    /// <summary>
+    /// The gear and the master caution are named controls now that DCS-BIOS carries the module.
+    /// The EXEC annunciator is not, and cannot be: PLT_CNI_EXEC_LED sits on an argument that
+    /// never moves, so it stays something the listener works out.
+    /// </summary>
+    [Fact]
+    public void LightsWhatItCanFromNamedControls()
+    {
+        var defaults = LedDefaults.For(AircraftRegistry.C130J);
+
+        Assert.NotEmpty(defaults.Signals);
+        Assert.Contains(defaults.McduLeds, l => l.Led == McduLed.Fail);
+        Assert.DoesNotContain(defaults.McduLeds, l => l.Led == McduLed.Exec);
+        Assert.Contains(McduLed.Exec, defaults.ComputedMcduLeds.Keys);
     }
 
     /// <summary>
