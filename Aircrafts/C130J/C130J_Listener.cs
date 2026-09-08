@@ -5,10 +5,10 @@ namespace WCtrlDcsBiosBridge.Aircrafts.C130J;
 /// <summary>
 /// C-130J CNI-MU repeater.
 ///
-/// DCS-BIOS has no module for this aircraft, so nothing arrives on the DCS-BIOS stream while
-/// it is loaded. Everything shown here comes from the wctrl-export.lua UDP feed, which scrapes
-/// the pilot's and the copilot's CNI, and the CNI is therefore the only page this listener
-/// offers.
+/// DCS-BIOS carries the aircraft but not its CNI-MU — the module declares every switch and
+/// lamp and not one line of the display. What is shown here therefore comes from the
+/// wctrl-export.lua UDP feed, which scrapes the pilot's and the copilot's CNI, and the CNI is
+/// the only page this listener offers.
 ///
 /// One listener drives one CDU and answers to one seat, named at construction and fixed for the
 /// life of the listener: the copilot's CNI reaches a panel only when a second CDU has been given
@@ -20,10 +20,12 @@ namespace WCtrlDcsBiosBridge.Aircrafts.C130J;
 /// size, no highlight. The layout comes from <c>Resources/c130j-cni-pages.json</c>, extracted
 /// offline from the module's own page scripts by <c>tools/cni-schema</c>.
 ///
-/// One lamp comes off the same feed: the CNI-MU's EXEC annunciator, which no argument and no
-/// cockpit parameter reports. <see cref="CniExecLamp"/> works it out from the page title and
-/// the EXEC keypresses, and holds it — the marker is only on the modified page, so a lamp
-/// recomputed from whatever page is on screen would go out the moment the crew turned away.
+/// One lamp comes off the same feed: the CNI-MU's EXEC annunciator, which nothing readable
+/// reports. DCS-BIOS declares it as PLT_CNI_EXEC_LED on cockpit argument 3390, but that
+/// argument never leaves zero — tried, and the lamp stayed dark. <see cref="CniExecLamp"/>
+/// works it out from the page title and the EXEC keypresses instead, and holds it — the marker
+/// is only on the modified page, so a lamp recomputed from whatever page is on screen would go
+/// out the moment the crew turned away.
 /// That lamp is the aircraft's rather than the seat's, so it is fed both seats' packets while
 /// the screen is fed only this one's.
 /// </summary>
@@ -109,7 +111,7 @@ internal sealed class C130J_Listener : AircraftListener
 
     protected override void RegisterCduControls() => RenderPlaceholder();
 
-    // Nothing to register: DCS-BIOS exports no controls for the C-130J.
+    // The gear lights and the master caution are declared in LedDefaults, which registers them.
     protected override void RegisterFrontpanelControls() { }
 
     // Runs on the UDP receiver thread, like the F-14B(U) and A-10C live export paths.

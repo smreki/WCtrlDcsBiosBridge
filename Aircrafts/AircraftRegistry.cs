@@ -105,20 +105,21 @@ internal static class AircraftRegistry
         c => new F14BU_Listener(c.Options),
         DcsBiosModuleId: 16);
 
-    // Same situation as the F-14B(U): DCS-BIOS has no C-130J module, so MetadataStart reports
-    // the name and nothing else follows. Everything shown comes from wctrl-export.lua, laid
-    // out against Resources/c130j-cni-pages.json. It borrows the A-10C DCS-BIOS id and json
-    // purely so the control locator has a real module to load; neither is read.
+    // DCS-BIOS carries this aircraft, but not its CNI-MU: the module declares every switch and
+    // lamp and not one line of the display. So the panel's LEDs come off DCS-BIOS like any
+    // other aircraft's, while the screen still comes from wctrl-export.lua, laid out against
+    // Resources/c130j-cni-pages.json.
+    //
+    // Id 51 is ours rather than DCSFlightpanels' — see the note in dcs-bios_modules.txt.
     //
     // The font is the A-10C's with one glyph redrawn. A CDU font's bitmaps need not look like
     // the characters they are filed under — the A-10C's U+2610 is an open-ended bracket pair,
     // which is what that aircraft wants there. The CNI uses the slot for an empty entry field
     // and wants a closed box, in both sizes.
     public static readonly AircraftDescriptor C130J = new(
-        1030, "C-130J", "A-10C.json", "Resources/c130j-font-21x31.json", true,
+        51, "C-130J", "C-130J.json", "Resources/c130j-font-21x31.json", true,
         new[] { "C-130J" },
-        c => new C130J_Listener(c.Options, c.IsPilot),
-        DcsBiosModuleId: 5);
+        c => new C130J_Listener(c.Options, c.IsPilot));
 
     /// <summary>
     /// Registry order is menu order. It is also match order for

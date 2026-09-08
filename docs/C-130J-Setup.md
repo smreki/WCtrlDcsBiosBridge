@@ -1,9 +1,14 @@
 # C-130J CNI-MU — in a hurry
 
-The C-130J is not carried by DCS-BIOS, so its CNI-MU pages come from the same export script
-the F-14B(U) uses, reading the display straight from the cockpit and sending it over UDP.
-Three steps, and if you already set up the F-14B(U) the first two are done.
+DCS-BIOS carries the C-130J, but not its CNI-MU: the module declares every switch and lamp
+and not one line of the display. So the panel's lamps come off DCS-BIOS like any other
+aircraft's, while the CNI-MU pages come from the same export script the F-14B(U) uses, reading
+the display straight from the cockpit and sending it over UDP. Three steps, and if you already
+set up the F-14B(U) the first two are done.
 
+> **A DCS-BIOS with the C-130J module is required.** Update it if the app reports
+> `C-130J.json` missing at start-up.
+>
 > The script and the app talk a versioned protocol. Take both from the **same release** —
 > a mismatched script is ignored and the page stays empty.
 
@@ -37,23 +42,27 @@ Load the C-130J in DCS and the CNI-MU appears on the CDU.
 
 ## What the C-130J shows
 
-**The CNI-MU, and nothing else.** DCS-BIOS has no module for this aircraft, so while it is
-loaded no C-130J data reaches the bridge: no gear, no clock, no switches. The augmented crew's
-display is not carried either.
+**The display is the CNI-MU, and nothing else.** DCS-BIOS does not export the CNI's screen, so
+the export script draws it; the augmented crew's display is not carried at all.
 
 Pages are recognised by the title they draw, so the CDU follows whatever the CNI is showing. A
 page the app does not recognise leaves the screen as it was rather than drawing it against the
 wrong layout.
+
+The **lamps** now come from DCS-BIOS: the gear lights and the master caution on the front
+panels. Every lamp the module declares — MSG, FAIL, DSPY and OFSET on each CNI, the mode
+annunciators, and the rest of the 126 — is offered in **LED mapping**, to bind to whichever
+LED you like. The EXEC annunciator is the exception, and has its own section below.
 
 ## The EXEC lamp
 
 The CDU's **EXEC** annunciator follows the CNI-MU's EXEC light. On an MCDU, which has no EXEC
 lamp, **RDY** shows it instead: the bridge drives both, and each panel lights the one it has.
 
-Nothing in the sim reports that lamp. It is not a cockpit animation argument — a sweep of every
-argument across a full EXEC cycle shows the key's own press pulse and nothing that stays lit —
-and it is not in `list_cockpit_params` either. So it is put together from two things that *are*
-readable, and then held.
+Nothing in the sim reports that lamp. DCS-BIOS appears to — it declares `PLT_CNI_EXEC_LED` on
+cockpit argument 3390 — but that argument never leaves zero: bound to the annunciator, the lamp
+stayed dark through a full EXEC cycle. It is not in `list_cockpit_params` either. So it is put
+together from two things that *are* readable, and then held.
 
 The first is the page title. The module builds the titles of its nineteen modifiable pages from
 a format with a leading marker, and the sim fills that in with `MOD ` while a change is waiting
@@ -168,6 +177,10 @@ been restarted since.
 
 `CNI SCHEMA MISSING` means `Resources\c130j-cni-pages.json` did not ship alongside the exe —
 reinstall rather than copying files around.
+
+A start-up warning naming `C-130J.json` means your DCS-BIOS predates the C-130J module. The
+CNI-MU itself still draws — it comes from the export script — but every lamp stays dark, and
+the log names each control it could not find. Update DCS-BIOS.
 
 `Scripts\wctrl-export\test_client.py` prints the raw feed on UDP 31090, which tells you
 whether DCS is sending before you start suspecting the bridge. The app's log reports a
