@@ -82,8 +82,9 @@ this way. See [LED mapping](docs/LED-Mapping.md).
 ### DCS export script (optional)
 
 An extra Lua script, shipped as the `wctrl-export-scripts-<version>.zip` asset of each
-release. It is **required** for the F-14B(U) CDNU and the C-130J CNI-MU, neither of which
-DCS-BIOS exports, and **optional** for the A-10C, where it pre-fills live wind and field
+release. It is **required** for the F-14B(U) CDNU and the C-130J CNI-MU because DCS-BIOS
+exports the base C-130J module but not its CNI-MU display, and it exports neither the
+F-14B(U) CDNU data. It is **optional** for the A-10C, where it pre-fills live wind and field
 elevation on the takeoff performance page. See
 [Lua export script setup](docs/Export-Script-Setup.md).
 
